@@ -1,8 +1,6 @@
 package com.algamoney.api.recource;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -15,15 +13,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.algamoney.api.event.RecursoCriadoEvent;
 import com.algamoney.api.model.Pessoa;
 import com.algamoney.api.repository.PessoaRepository;
+import com.algamoney.api.repository.PessoaService;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -34,6 +33,9 @@ public class PessoaResource {
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
+	
+	@Autowired
+	private PessoaService pessoaService;
 	
 	@GetMapping
 	private List<Pessoa> listar() {
@@ -50,32 +52,25 @@ public class PessoaResource {
 	}
 	
 	@GetMapping("/{codigo}")
-	public Optional<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
-		return pessoaRepository.findById(codigo);
+	public Pessoa buscarPeloCodigo(@PathVariable Long codigo) {
+		return pessoaRepository.findOne(codigo);
 	}
-	
-<<<<<<< Updated upstream
-	
-	@DeleteMapping("/{codigo}")
-	@ResponseStatus(code=HttpStatus.NO_CONTENT)
-	public void remover(@PathVariable Long codigo) {
-		pessoaRepository.deleteById(codigo);
-	}
-=======
+
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(value=HttpStatus.NO_CONTENT)
-	public HttpStatus remover(@PathVariable Long codigo) {
-		
-		try {
-			pessoaRepository.deleteById(codigo);
-			return HttpStatus.OK;
-			
-		}catch (Exception e) {
-			return HttpStatus.NO_CONTENT;
+	public void remover(@PathVariable Long codigo) {
+			pessoaRepository.delete(codigo);
 		}
-		
+	
+	@PutMapping("/{codigo}")
+	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
+		Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
+		return ResponseEntity.ok(pessoaSalva);
 	}
 	
->>>>>>> Stashed changes
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
+	}
 }
-
