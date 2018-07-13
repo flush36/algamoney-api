@@ -54,11 +54,28 @@ public class PessoaResource {
 		return pessoaRepository.findById(codigo);
 	}
 	
+<<<<<<< Updated upstream
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(code=HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		pessoaRepository.deleteById(codigo);
 	}
+=======
+	@DeleteMapping("/{codigo}")
+	@ResponseStatus(value=HttpStatus.NO_CONTENT)
+	public HttpStatus remover(@PathVariable Long codigo) {
+		
+		try {
+			pessoaRepository.deleteById(codigo);
+			return HttpStatus.OK;
+			
+		}catch (Exception e) {
+			return HttpStatus.NO_CONTENT;
+		}
+		
+	}
+	
+>>>>>>> Stashed changes
 }
 
