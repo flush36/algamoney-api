@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algamoney.api.event.RecursoCriadoEvent;
 import com.algamoney.api.model.Pessoa;
 import com.algamoney.api.repository.PessoaRepository;
-import com.algamoney.api.repository.PessoaService;
+import com.algamoney.api.service.PessoaService;
 
 @RestController
 @RequestMapping("/pessoas")
